@@ -13,7 +13,7 @@ import (
 
 const (
 	urlCotationApi = "http://localhost:8080/cotacao"
-	pathFile       = "./cotation.txt"
+	pathFile       = "./src/storage/cotation.txt"
 )
 
 type Cotation struct {
