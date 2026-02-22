@@ -44,7 +44,7 @@ func main() {
 }
 
 func initDb() {
-	db, err := sql.Open("sqlite", "./cotation.db")
+	db, err := sql.Open("sqlite", dataSourceName)
 	if err != nil {
 		log.Fatal(err)
 	}
