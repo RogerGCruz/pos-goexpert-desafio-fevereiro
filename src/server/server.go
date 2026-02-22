@@ -11,7 +11,10 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const urlAwesomeApi = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+const (
+	urlAwesomeApi  = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+	dataSourceName = "../storage/cotation.db"
+)
 
 type Cotation struct {
 	Bid string `json:"bid"`
@@ -63,7 +66,7 @@ func initServer() {
 }
 
 func insertCotation(responseAwesomeApi ResponseAwesomeApi) {
-	db, err := sql.Open("sqlite", "./cotation.db")
+	db, err := sql.Open("sqlite", dataSourceName)
 	if err != nil {
 		log.Fatal(err)
 	}
