@@ -59,9 +59,9 @@ func initDb() {
 }
 
 func initServer() {
+	// Endpoint cotacao na porta 8080
 	http.HandleFunc("/cotacao", handler)
 	http.ListenAndServe(":8080", nil)
-
 	log.Println("Listening on port 8080")
 }
 
@@ -85,9 +85,11 @@ func insertCotation(responseAwesomeApi ResponseAwesomeApi) {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 
+	// Contexto com timeout 200ms para AwesomeApi
 	ctxAwesomeApi, cancelAwesomeApi := context.WithTimeout(context.Background(), time.Millisecond*200)
 	defer cancelAwesomeApi()
 
+	// Contextos retornam erro nos logs se timeout insuficiente
 	req, err := http.NewRequestWithContext(ctxAwesomeApi, "GET", urlAwesomeApi, nil)
 	if err != nil {
 		log.Println("Error creating request for AwesomeApi", err)
@@ -95,6 +97,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Consome API https://economia.awesomeapi.com.br/json/last/USD-BRL
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println("Error making request for AwesomeApi", err)
@@ -113,6 +116,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	insertCotation(responseAwesomeApi)
 
+	// Retorna JSON para cliente com o bid
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(Cotation{Bid: responseAwesomeApi.USDBRL.Bid})
 }
